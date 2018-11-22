@@ -2,36 +2,61 @@
 % moves agents in terms of componenets to avoid collisions with
 % non-traversable areas
 
-function move_components(agent_positions_x, agent_positions_y, direction_x, direction_y) %x,y being the components of vector to centroid
-length_arr = [length(agent_positions_x) length(agent_positions_y)];
-max_comp = max(length_arr);
-min_comp = min(length_arr);
-if(max_comp == length(agent_positions_x))
-    dir_1 = agent_positions_x;
-    dir_2 = agent_positions_y;
+function move_components(agent_positions_x,agentposition_y,direction_x,dirction_y) %x,y being the components of agent_positions
+length_arr = [length(x) length(y)];
+max_dist = max(length_arr);
+if(max_dist == length(x))
+    dir_1 = direction_x;
+    pos_1 = agent_position_x;
+    dir_2 = direction_y;
+    pos_2 = agent_position_y
 else
-    dir_1 = agent_positions_y;
-    dir_2 = agent_positions_x;
+    dir_1 = agent_postion_y;
+    dir_2 = agent_position_x;
 end
 
-if (dir_1 >0)
-if((dir_1 + 1) == 1) %1 has to refer to traversable matrix
-    
-    
-    while((dir_1 +1) == 1)
-        for i=1:1:max_comp
-        dir_1;
-        end
+%% CASE 1 direction = (+,+)
+if pos_1 + 1 == 1 
+    move_agents(pos_1 + 1);
+else 
+    move_agents(pos_2 + 1);
+end 
+ 
+%% CASE 2 direction = (-,-)
+if pos_1 - 1 == 1
+    move_agents(pos_1 - 1);
+else
+    move_agents(pos_2 - 1);
+end 
+
+%% CASE 3 direction = (+,-)
+if pos_1 == agent_position_x
+    if pos_1 + 1 == 1
+        move_agents(pos_1 + 1);
+    else 
+        move_agents(pos_2 - 1)
     end
-    if((dir_1 + 1) == 0)
-        if((dir_2 +1)== 1)
-            while((dir_2 +1) == 1)
-                forj=1:1:min_comp
-                 ;
-                end
-            end
-        end
-        
-end
+elseif pos_1 == agent_position_y
+    if pos_1 - 1 == 1 
+        move_agents(pos_1 - 1)
+    else
+        move_agents(pos_2 + 1)
+    end 
+end 
+
+%% CASE 4 direction = (-,+)
+if pos_1 == agent_position_x
+    if pos_1 - 1 == 1
+        move_agents(pos_1 - 1);
+    else 
+        move_agents(pos_2 + 1)
+    end
+elseif pos_1 == agent_position_y
+    if pos_1 + 1 == 1 
+        move_agents(pos_1 + 1)
+    else
+        move_agents(pos_2 - 1)
+    end 
+end 
 
 
