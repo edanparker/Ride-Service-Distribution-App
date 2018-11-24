@@ -1,9 +1,9 @@
 %% MOVE COMPONENTS
 
 function move_components(agent_position_x,agent_position_y,direction_x,direction_y) %% Pathfinding Function that uses the agents current position and the direction vector to the centroid
-length_arr = [length(delta_x) length(delta_y)]; %% Establishes the distance array
-max_dist = max(length_arr); %% Finds the max distance between the x distance and y distance
-if(max_dist == length(delta_x)) %% Assigns names depending on the max distance component
+length_arr = [length(x) length(y)]; %% Establishes the distance array
+max_dist = max(length_arr); %% Finds the max distnace between the x distance and y distance
+if(max_dist == length(x)) %% Assigns names depending on the max distance component
     pos_1 = agent_position_x;
     pos_2 = agent_position_y;
 else
