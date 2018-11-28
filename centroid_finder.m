@@ -8,6 +8,7 @@ function Centroids = centroid_finder(Agent_Points, Mass, Density, Number_of_Robo
 
 Centroids = zeros(Number_of_Robots, 2);
 Centroid_sum = zeros(Number_of_Robots, 2);
+Traversable_Matrix = xlsread('Traversable_Matrix.xlsx'); %read in traversable matrix
  
 for i = 1:Number_of_Robots 
     for j = 1:size(Agent_Points{1,i},1)
@@ -31,6 +32,82 @@ for i = 1:Number_of_Robots
         Centroids(i,2) = Centroid_sum(i,2)/Mass(i);
     end
 end
-
-
+for i = 1:Number_of_Robots % iterate through each centroid
+    if Traversable_Matrix(Centroids(i,1),Centroids(i,2)) == 0 % returns true if the ith centroid currently lies in an untraversable point
+        for j = 1:4 
+            % initializes possible centroid points
+            possible_centroid_north = [Centroids(i,1) Centroids(i,2)];
+            possible_centroid_east = [Centroids(i,1) Centroids(i,2)];
+            possible_centroid_south = [Centroids(i,1) Centroids(i,2)];
+            possible_centroid_west = [Centroids(i,1) Centroids(i,2)];
+            % bumps the possible centroid points in their respective
+            % directions until they are positioned in a traversable portion
+            % of the map
+            while(Traversable_Matrix(possible_centroid_north(1),possible_centroid_north(2)) == 0)
+                possible_centroid_north(2) = possible_centroid_north(2) + 1;
+            end
+            while(Traversable_Matrix(possible_centroid_east(1),possible_centroid_east(2)) == 0)
+                possible_centroid_east(1) = possible_centroid_east(1) + 1;
+            end
+            while(Traversable_Matrix(possible_centroid_south(1),possible_centroid_south(2)) == 0)
+                possible_centroid_south(2) = possible_centroid_south(2) - 1;
+            end
+            while(Traversable_Matrix(possible_centroid_west(1),possible_centroid_west(2)) == 0)
+                possible_centroid_west(1) = possible_centroid_west(1) - 1;
+            end
+            % gets the magnitude of each vector
+            north_magnitude = sqrt((possible_centroid_north(1)-Centroids(i,1))^2+(possible_centroid_north(2)-Centroids(i,2))^2);
+            east_magnitude = sqrt((possible_centroid_east(1)-Centroids(i,1))^2+(possible_centroid_east(2)-Centroids(i,2))^2);
+            south_magnitude = sqrt((possible_centroid_south(1)-Centroids(i,1))^2+(possible_centroid_south(2)-Centroids(i,2))^2);
+            west_magnitude = sqrt((possible_centroid_west(1)-Centroids(i,1))^2+(possible_centroid_west(2)-Centroids(i,2))^2);
+            % this block finds finds the possible centroid placement with
+            % the least distance to original centroid position
+            if north_magnitude < south_magnitude
+                if east_magnitude < west_magnitude
+                    if north_magnitude < east_magnitude
+                        % sets centroid to the north potential point
+                        Centroids(i,1) = possible_centroid_north(1);
+                        Centroids(i,2) = possible_centroid_north(2);
+                    else
+                        % sets centroid to the east potential point
+                        Centroids(i,1) = possible_centroid_east(1);
+                        Centroids(i,2) = possible_centroid_east(2);
+                    end
+                else
+                    if north_magnitude < west_magnitude
+                        % sets centroid to the north potential point
+                        Centroids(i,1) = possible_centroid_north(1);
+                        Centroids(i,2) = possible_centroid_north(2);
+                    else
+                        % sets centroid to the west potential point
+                        Centroids(i,1) = possible_centroid_west(1);
+                        Centroids(i,2) = possible_centroid_west(2);
+                    end
+                end
+            end
+            if south_magnitude < north_magnitude
+                if east_magnitude < west_magnitude
+                    if south_magnitude < east_magnitude
+                        % sets centroid to the south potential point
+                        Centroids(i,1) = possible_centroid_south(1);
+                        Centroids(i,2) = possible_centroid_south(2);
+                    else
+                        % sets centroid to the east potential point
+                        Centroids(i,1) = possible_centroid_east(1);
+                        Centroids(i,2) = possible_centroid_east(2);
+                    end
+                else
+                    if south_magnitude < west_magnitude
+                        % sets centroid to the south potential point
+                        Centroids(i,1) = possible_centroid_south(1);
+                        Centroids(i,2) = possible_centroid_south(2);
+                    else
+                        % sets centroid to the west potential point
+                        Centroids(i,1) = possible_centroid_west(1);
+                        Centroids(i,2) = possible_centroid_west(2);
+                    end
+                end
+            end
+        end
+    end
 end
